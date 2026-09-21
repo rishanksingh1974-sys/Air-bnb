@@ -1,0 +1,26 @@
+{
+  "name": "air-bnb",
+  "version": "1.0.0",
+  "description": "It is a website for tourist place booking",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rishanksingh1974-sys/Air-bnb.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/rishanksingh1974-sys/Air-bnb/issues"
+  },
+  "homepage": "https://github.com/rishanksingh1974-sys/Air-bnb#readme",
+  "dependencies": {
+    "ejs": "^6.0.1",
+    "express": "^5.2.1",
+    "mongoose": "^9.10.1"
+  }
+}
