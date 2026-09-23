@@ -19,6 +19,7 @@ main().then(()=>{
 
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"));
+app.use(express.urlencoded({extended:true}));
 
 // app.get("/testListing",async(req,res)=>{
 //     let sampleListing=new Listing({
@@ -49,9 +50,31 @@ app.get("/listings",async(req,res)=>{
     res.render("listings/index.ejs",{allListing});
 });
 
-//
+
+//Create listings
+app.get("/listing/new",(req,res)=>{
+res.render("listings/new.ejs");
+});
+
+app.post("/listings",async(req,res)=>{
+ let {title,description,price,image,country,location}=req.body;
+ let addList=new Listing({
+    title:title,
+    description:description,
+    image:image,
+    price:price,
+    country:country,
+    location:location
+ });
+
+await addList.save();
+res.redirect("/listings");
+});
+
+//Indiviual listing
 app.get("/listing/:id",async(req,res)=>{
     let {id}=req.params;
     const listing=await Listing.findById(id);
     res.render("listings/show.ejs",{listing});
 });
+
