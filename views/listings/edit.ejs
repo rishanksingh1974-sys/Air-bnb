@@ -7,39 +7,45 @@
             <div class="col-8 offset-2">
                 <h3>Edit the details</h3>
 
-                <form method="POST" action="/listing/<%=listing._id%>?_method=PUT">
+                <form method="POST" action="/listing/<%=listing._id%>?_method=PUT" novalidate class="needs-validation">
                     <div class="mb-3">
                         <label for="title" class="form-label new-label"><b>Title</b></label>
-                        <input type="text" value="<%=listing.title%>" name="title" class="form-control">
+                        <input type="text" value="<%=listing.title%>" name="title" class="form-control" required>
+                        <div class="valid-feedback">Title looks good</div>
                     </div>
 
                     <div class="mb-3">
                         <label for="description" class="form-label new-label"><b>Description</b></label>
                         <textarea name="description" type="text"
-                            class="form-control"><%=listing.description%></textarea>
+                            class="form-control" required><%=listing.description%></textarea>
+                            <div class="invalid-feedback">Title should be valid...</div>
                     </div>
 
                     <div class="mb-3">
                         <label for="image" class="form-label new-label"><b>Image url</b></label>
-                        <input type="text" value="<%=listing.image%>" name="image" class="form-control">
+                        <input type="text" value="<%=listing.image%>" name="image" class="form-control" required>
+                        <div class="invalid-feedback">Image should be valid..</div>
                     </div>
                     <div class="row">
                         <div class="mb-3 col-md-4">
 
                             <label for="price" class="form-label new-label"><b>Price</b></label>
-                            <input type="number" value="<%=listing.price%>" name="price" class="form-control">
+                            <input type="number" value="<%=listing.price%>" name="price" class="form-control" required>
+                            <div class="invalid-feedback">Price should be valid..</div>
                         </div>
 
                         <div class="mb-3 col-md-8">
 
                             <label for="country" class="form-label new-label"><b>Country</b></label>
-                            <input type="text" value="<%=listing.country%>" name="country" class="form-control">
+                            <input type="text" value="<%=listing.country%>" name="country" class="form-control" required>
+                            <div class="invalid-feedback">Country should be valid..</div>
                         </div>
                     </div>
 
                     <div class="mb-3">
                         <label for="location" class="form-label new-label"><b>Location</b></label>
-                        <input type="text" value="<%=listing.location%>" name="location" class="form-control">
+                        <input type="text" value="<%=listing.location%>" name="location" class="form-control" required>
+                        <div class="invalid-feedback">Location should be valid..</div>
                     </div>
 
                     <button class="btn btn-dark edit-btn mt-2 mb-3">Edit</button>
