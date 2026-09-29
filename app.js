@@ -61,8 +61,9 @@ app.get("/listing/new",(req,res)=>{
 res.render("listings/new.ejs");
 });
 
-app.post("/listings",async(req,res)=>{
- let {title,description,price,image,country,location}=req.body;
+app.post("/listings",async(req,res,next)=>{
+ try{
+    let {title,description,price,image,country,location}=req.body;
  let addList=new Listing({
     title:title,
     description:description,
@@ -74,6 +75,10 @@ app.post("/listings",async(req,res)=>{
 
 await addList.save();
 res.redirect("/listings");
+ }
+ catch(err){
+    next(err);
+ }
 });
 
 //update
@@ -113,4 +118,8 @@ app.delete("/listing/:id",async(req,res)=>{
     let {id}=req.params;
     await Listing.findByIdAndDelete(id);
     res.redirect("/listings");
+});
+
+app.use((err,req,res,next)=>{
+    res.send("Something went wrong");
 });
