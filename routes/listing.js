@@ -1,20 +1,20 @@
-const express=require("express");
-const router=express.Router({mergeParams:true});
+const express = require("express");
+const router = express.Router({ mergeParams: true });
 const wrapAsync = require("../utils/wrapAsync");
 const ExpressError = require("../utils/ExpressError.js");
-const {listingSchema}=require("../schema.js");
+const { listingSchema } = require("../schema.js");
 const Listing = require("../models/listing.js");
+const {isLoggedIn}=require("../middleware.js");
 
-
-const validateListing=(req,res,next)=>{
-     let { error } = listingSchema.validate({
+const validateListing = (req, res, next) => {
+    let { error } = listingSchema.validate({
         listing: req.body
     });
-    if(error){
-        let errMsg=error.details.map((el)=>el.message).join(",");
-        throw new ExpressError(400,errMsg);
+    if (error) {
+        let errMsg = error.details.map((el) => el.message).join(",");
+        throw new ExpressError(400, errMsg);
     }
-    else{
+    else {
         next();
     }
 }
@@ -26,14 +26,15 @@ router.get("/", wrapAsync(async (req, res) => {
 
 
 
-router.get("/new", (req, res) => {
+router.get("/new",isLoggedIn, (req, res) => {
 
-    res.render("listings/new.ejs");
+        res.render("listings/new.ejs");
+    
 });
 
 
-router.post("/", validateListing,wrapAsync(async (req, res, next) => {
-   
+router.post("/",isLoggedIn, validateListing, wrapAsync(async (req, res, next) => {
+
     let { title, description, price, image, country, location } = req.body;
     let addList = new Listing({
         title: title,
@@ -44,7 +45,7 @@ router.post("/", validateListing,wrapAsync(async (req, res, next) => {
         location: location
     });
     await addList.save();
-    req.flash("success","New listing created!");
+    req.flash("success", "New listing created!");
     res.redirect("/listings");
 }));
 
@@ -56,29 +57,30 @@ router.post("/", validateListing,wrapAsync(async (req, res, next) => {
 router.get("/:id", wrapAsync(async (req, res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id).populate("reviews");
-    if(!listing){
-        req.flash("error","The listing do not exist");
+    if (!listing) {
+        req.flash("error", "The listing do not exist");
         res.redirect("/listings");
     }
-    else{
-    res.render("listings/show.ejs", { listing });}
+    else {
+        res.render("listings/show.ejs", { listing });
+    }
 }));
 
-router.get("/:id/edit", wrapAsync(async (req, res) => {
+router.get("/:id/edit",wrapAsync(async (req, res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id);
-if(!listing){
-        req.flash("error","The listing do not exist");
+    if (!listing) {
+        req.flash("error", "The listing do not exist");
         res.redirect("/listings");
     }
-    else{
-    res.render("listings/edit.ejs", { listing });
+    else {
+        res.render("listings/edit.ejs", { listing });
     }
 }));
 
 
-router.put("/:id",validateListing, wrapAsync(async (req, res) => {
-    
+router.put("/:id",isLoggedIn, validateListing, wrapAsync(async (req, res) => {
+
     let { title, description, price, image, country, location } = req.body;
     let { id } = req.params;
 
@@ -89,21 +91,21 @@ router.put("/:id",validateListing, wrapAsync(async (req, res) => {
         price: price,
         country: country,
         location: location
-    },{
-        runValidators:true,
+    }, {
+        runValidators: true,
     });
-req.flash("success","Listing updated!");
+    req.flash("success", "Listing updated!");
     res.redirect(`/listings/${id}`);
 }));
 
 
-router.delete("/:id", wrapAsync(async (req, res) => {
+router.delete("/:id",isLoggedIn, wrapAsync(async (req, res) => {
     let { id } = req.params;
     await Listing.findByIdAndDelete(id);
-    req.flash("success","Listing deleted");
+    req.flash("success", "Listing deleted");
     res.redirect("/listings");
 }));
 
 
 
-module.exports=router;
+module.exports = router;
